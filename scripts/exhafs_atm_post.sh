@@ -424,11 +424,16 @@ do
     fi
   fi
 done
+
+if [ -s cmdfile_mppnccombine ]; then
+
 chmod +x cmdfile_mppnccombine
 if [ ${machine} = "wcoss_cray" ]; then
   ${APRUNF} cmdfile_mppnccombine
 else
   ${APRUNC} ${MPISERIAL} -m cmdfile_mppnccombine
+fi
+
 fi
 
 # Pass over the grid_spec.nc, atmos_static.nc, oro_data.nc if not yet exist
@@ -446,7 +451,11 @@ fi
 if [[ "${is_moving_nest:-.false.}" = *".true."* ]] || [[ "${is_moving_nest:-.false.}" = *".T."* ]] ; then
   # Pass over the grid_mspec files for moving nest (useful for storm cycling)
   if [ $FHR -lt 12 ] && [ -s ${INPdir}/${grid_mspec} ]; then
-    ${NCP} -p ${INPdir}/${grid_mspec} ${INPdir}/RESTART/
+    while [ $(( $(date +%s) - $(stat -c %Y ${INPdir}/${grid_mspec}) )) -lt 30  ]; do sleep 10; done
+    if [ ! -L ${INPdir}/${grid_mspec} ]; then
+      mv ${INPdir}/${grid_mspec} ${INPdir}/RESTART/${grid_mspec}
+      ${NLN} ${INPdir}/RESTART/${grid_mspec} ${INPdir}/${grid_mspec}
+    fi
   fi
   # Deliver hafs.trak.patcf if exists
   if [ $FHR -eq $NHRS ] && [ -s ${INPdir}/${fort_patcf} ]; then

@@ -673,6 +673,26 @@ for file in $(ls ${FIXam}/fix_co2_proj/global_co2historicaldata*); do
   ${NCP} $file $(echo $(basename $file) |sed -e "s/global_//g")
 done
 
+# Copy MERRA2 fix files
+if [ ${iaer:-111} = 1011 ]; then
+  for n in 01 02 03 04 05 06 07 08 09 10 11 12; do
+    ${NCP} ${FIXhafs}/fix_aer/merra2.aerclim.2003-2014.m${n}.nc aeroclim.m${n}.nc
+  done
+  ${NCP} ${FIXhafs}/fix_lut/optics_BC.v1_3.dat  optics_BC.dat
+  ${NCP} ${FIXhafs}/fix_lut/optics_OC.v1_3.dat  optics_OC.dat
+  ${NCP} ${FIXhafs}/fix_lut/optics_DU.v15_3.dat optics_DU.dat
+  ${NCP} ${FIXhafs}/fix_lut/optics_SS.v3_3.dat  optics_SS.dat
+  ${NCP} ${FIXhafs}/fix_lut/optics_SU.v1_3.dat  optics_SU.dat
+fi
+
+# Fix files for Thompson MP
+if [ ${imp_physics:-11} = 8 ]; then
+  ${NCP} ${FIXam}/qr_acr_qgV2.dat ./
+  ${NCP} ${FIXam}/qr_acr_qsV2.dat ./
+  ${NCP} ${FIXam}/CCN_ACTIVATE.BIN ./
+  ${NCP} ${FIXam}/freezeH2O.dat ./
+fi
+
 if [ $gtype = nest ]; then
 
 cd ./INPUT
@@ -717,7 +737,11 @@ cd ..
 # model_configure, and nems.configure
 #${NCP} ${PARMforecast}/data_table .
 ${NCP} ${PARMforecast}/diag_table.tmp .
-${NCP} ${PARMforecast}/field_table .
+if [ ${imp_physics:-11} = 8 ]; then
+  ${NCP} ${PARMforecast}/field_table_thompson ./field_table
+else
+  ${NCP} ${PARMforecast}/field_table .
+fi
 ${NCP} ${PARMforecast}/input.nml.tmp .
 ${NCP} ${PARMforecast}/input_nest.nml.tmp .
 ${NCP} ${PARMforecast}/model_configure.tmp .
@@ -850,28 +874,31 @@ if [ ${warmstart_from_restart} = yes ]; then
   sed -i -e "2s/.*/  ${yr}    $(echo ${mn}|sed 's/^0/ /')    $(echo ${dy}|sed 's/^0/ /')    $(echo ${hh}|sed 's/^0/ /')     0     0        Model start time:   year, month, day, hour, minute, second/" ./coupler.res
   sed -i -e "3s/.*/  ${yr}    $(echo ${mn}|sed 's/^0/ /')    $(echo ${dy}|sed 's/^0/ /')    $(echo ${hh}|sed 's/^0/ /')     0     0        Current model time: year, month, day, hour, minute, second/" ./coupler.res
   ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.nc ./fv_core.res.nc
-# ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_srf_wnd.res.tile1.nc ./fv_srf_wnd.res.tile1.nc
-# ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.tile1.nc ./fv_core.res.tile1.nc
-# ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_tracer.res.tile1.nc ./fv_tracer.res.tile1.nc
+  ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_srf_wnd.res.tile1.nc ./fv_srf_wnd.res.tile1.nc
+  ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.tile1.nc ./fv_core.res.tile1.nc
+  ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_tracer.res.tile1.nc ./fv_tracer.res.tile1.nc
   # Remove the checksum attribute for all restart variables, so that the
   # forecast executable will not compare the checksum attribute against the
   # checksum calculated from the actual data. This is because the DA/GSI
   # currently only update the variable itself but not its checksum attribute.
-  ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_srf_wnd.res.tile1.nc ./fv_srf_wnd.res.tile1.nc
-  ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.tile1.nc ./fv_core.res.tile1.nc
-  ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_tracer.res.tile1.nc ./fv_tracer.res.tile1.nc
+# ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_srf_wnd.res.tile1.nc ./fv_srf_wnd.res.tile1.nc
+# ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.tile1.nc ./fv_core.res.tile1.nc
+# ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_tracer.res.tile1.nc ./fv_tracer.res.tile1.nc
 # ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.phy_data.nc ./phy_data.nc
 # ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.sfc_data.nc ./sfc_data.nc
 
   for n in $(seq 2 ${nest_grids}); do
     ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.nest$(printf %02d ${n}).nc ./fv_core.res.nest$(printf %02d ${n}).nc
+    ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_srf_wnd.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_srf_wnd.res.nest$(printf %02d ${n}).tile${n}.nc
+    ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_core.res.nest$(printf %02d ${n}).tile${n}.nc
+    ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_tracer.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_tracer.res.nest$(printf %02d ${n}).tile${n}.nc
   # if [ -e ${RESTARTinp}/${YMD}.${hh}0000.fv_BC_ne.res.nest$(printf %02d ${n}).nc ]; then
   #   ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_BC_ne.res.nest$(printf %02d ${n}).nc ./fv_BC_ne.res.nest$(printf %02d ${n}).nc
   #   ${NLN} ${RESTARTinp}/${YMD}.${hh}0000.fv_BC_sw.res.nest$(printf %02d ${n}).nc ./fv_BC_sw.res.nest$(printf %02d ${n}).nc
   # fi
-    ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_srf_wnd.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_srf_wnd.res.nest$(printf %02d ${n}).tile${n}.nc
-    ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_core.res.nest$(printf %02d ${n}).tile${n}.nc
-    ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_tracer.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_tracer.res.nest$(printf %02d ${n}).tile${n}.nc
+#   ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_srf_wnd.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_srf_wnd.res.nest$(printf %02d ${n}).tile${n}.nc
+#   ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_core.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_core.res.nest$(printf %02d ${n}).tile${n}.nc
+#   ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.fv_tracer.res.nest$(printf %02d ${n}).tile${n}.nc ./fv_tracer.res.nest$(printf %02d ${n}).tile${n}.nc
 #   ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.phy_data.nest$(printf %02d ${n}).tile${n}.nc ./phy_data.nest$(printf %02d ${n}).tile${n}.nc
 #   ncatted -a checksum,,d,, ${RESTARTinp}/${YMD}.${hh}0000.sfc_data.nest$(printf %02d ${n}).tile${n}.nc ./sfc_data.nest$(printf %02d ${n}).tile${n}.nc
   done
@@ -883,7 +910,11 @@ cd ..
 # model_configure, and nems.configure
 #${NCP} ${PARMforecast}/data_table .
 ${NCP} ${PARMforecast}/diag_table.tmp .
-${NCP} ${PARMforecast}/field_table .
+if [ ${imp_physics:-11} = 8 ]; then
+  ${NCP} ${PARMforecast}/field_table_thompson ./field_table
+else
+  ${NCP} ${PARMforecast}/field_table .
+fi
 ${NCP} ${PARMforecast}/input.nml.tmp .
 ${NCP} ${PARMforecast}/input_nest.nml.tmp .
 ${NCP} ${PARMforecast}/model_configure.tmp .
@@ -1003,6 +1034,10 @@ if [ ${run_ocean} = yes ];  then
   ${NCP} ${WORKhafs}/intercom/hycominit/forcing* .
   ${NLN} forcing.presur.a forcing.mslprs.a
   ${NLN} forcing.presur.b forcing.mslprs.b
+  # copy hycom limits
+  ${NCP} ${WORKhafs}/intercom/hycominit/limits .
+ ## create hycom limits
+ #${USHhafs}/hafs_hycom_limits.py ${CDATE}
   # copy fix
   ${NCP} ${FIXhycom}/hafs_${hycom_basin}.basin.regional.depth.a regional.depth.a
   ${NCP} ${FIXhycom}/hafs_${hycom_basin}.basin.regional.depth.b regional.depth.b
@@ -1028,8 +1063,7 @@ if [ ${run_ocean} = yes ];  then
   ${NCP} ${PARMhycom}/hafs_${hycom_basin}.basin.fcst.blkdat.input blkdat.input
   ${NCP} ${PARMhycom}/hafs_${hycom_basin}.basin.ports.input ports.input
   ${NCP} ${PARMhycom}/hafs_${hycom_basin}.basin.patch.input.${ocn_tasks} patch.input
-  # create hycom limits
-  ${USHhafs}/hafs_hycom_limits.py ${CDATE}
+
 fi #if [ ${run_ocean} = yes ]; then
 
 if [ ${run_wave} = yes ]; then
