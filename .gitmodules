@@ -20,7 +20,7 @@
 	branch = feature/hafsv0.3_final
 [submodule "GPLOT"]
 	path = sorc/hafs_graphics.fd/hrd_gplot
-	url = https://github.com/ghassan-alaka/GPLOT.git
+	url = https://github.com/hafs-community/GPLOT.git
 	branch = support/HAFSv0.3
 [submodule "hafs_graphics"]
 	path = sorc/hafs_graphics.fd/emc_graphics
