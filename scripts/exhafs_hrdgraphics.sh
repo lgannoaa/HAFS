@@ -41,6 +41,11 @@ GPLOT_ARCHIVE="${GPLOThafs}/archive/GPLOT_tarballer.sh"
 ADECKhafs=${ADECKhafs:-/lfs1/HFIP/hur-aoml/Ghassan.Alaka/adeck/NHC}
 BDECKhafs=${BDECKhafs:-/lfs1/HFIP/hur-aoml/Ghassan.Alaka/bdeck}
 SYNDAThafs=${SYNDAThafs:-/lfs4/HFIP/hwrf-data/hwrf-input/SYNDAT-PLUS}
+if [ "${machine}" == "orion" ]; then
+    SIDhafs="/home/galaka/GPLOT/tbl/SIDs_Old_New.dat"
+else
+    SIDhafs="/home/Ghassan.Alaka/GPLOT/tbl/SIDs_Old_New.dat"
+fi
 
 # Setup the working directory and change into it
 COMgplot=${COMgplot:-${COMhafs}/hrdgraphics}
@@ -84,7 +89,7 @@ do
 
     # Find and parse the ATCF file into an individual file for each storm
     # Do this even for HAFS regional to remove ".all" from file name.
-    ${GPLOT_PARSE} HAFS ${STORMNUM} ${BASIN} ${COMgplot} ${COMhafs} ${BDECKhafs} ${SYNDAThafs} 0 "*${DATE}.hafs.trak.atcfunix.all"
+    ${GPLOT_PARSE} HAFS ${STORMNUM} ${BASIN} ${COMgplot} ${COMhafs} ${BDECKhafs} ${SYNDAThafs} ${SIDhafs} 0 "*${DATE}.hafs.trak.atcfunix.all"
     #${GPLOT_PARSE} HAFS ${CDNOSCRUB}/${SUBEXPT} ${CDNOSCRUB}/${SUBEXPT} ${BDECKhafs} ${SYNDAThafs} 0 "*${DATE}.hafs.trak.atcfunix"
 
     # Check the status logs for all GPLOT components.
@@ -113,7 +118,7 @@ do
     fi
 
     # Deliver all new and modified graphics to COMhafs/graphics
-    ${USHhafs}/rsync-no-vanished.sh -av --no-links --include="*/" --include="*gif" --include="*dat" --exclude="*" ${WORKgplot}/. ${COMgplot}/.
+    ${USHhafs}/rsync-no-vanished.sh -av --no-links --include="*/" --include="*gif" --include="*dat" --include="*structure*txt" --exclude="*" ${WORKgplot}/. ${COMgplot}/.
     #rsync -av --include="*.atcfunix" --exclude="*" ${COMhafs}/. ${COMgplot}/.
 
     # If all status logs are complete and the final output has been processed
@@ -139,7 +144,7 @@ done
 # Now that everything is complete, move all graphics to the $COMhafs directory.
 if [ "${SENDCOM}" == "YES" ]; then
     #cp -rup ${WORKgplot} ${COMgplot}
-    ${USHhafs}/rsync-no-vanished.sh -av --no-links --include="*/" --include="*gif" --include="*dat" --exclude="*" ${WORKgplot}/. ${COMgplot}/.
+    ${USHhafs}/rsync-no-vanished.sh -av --no-links --include="*/" --include="*gif" --include="*dat" --include="*structure*txt" --exclude="*" ${WORKgplot}/. ${COMgplot}/.
     #rsync -av --include="*hafs.trak..atcfunix" --exclude="*" ${COMhafs}/. ${COMgplot}/.
 fi
 
