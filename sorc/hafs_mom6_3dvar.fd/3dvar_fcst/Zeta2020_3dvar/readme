@@ -1,0 +1,11 @@
+.
+├── 2020102512
+│   ├── cycle.sh -> /work/noaa/marine/yli/HAFS/sorc/hafs_mom6_3dvar.fd/soca-science/scripts/workflow/cycle.sh
+│   ├── exp.config
+│   └── static -> /work/noaa/stmp/yli/Ian2022_3dvar/static
+└── readme
+
+2 directories, 3 files
+
+Only need to change time in exp.config
+
