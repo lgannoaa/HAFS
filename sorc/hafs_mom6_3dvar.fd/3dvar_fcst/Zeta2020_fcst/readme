@@ -1,0 +1,24 @@
+Zeta2020_fcst
+├── 2020102500
+│   ├── cycle.sh -> /work/noaa/marine/yli/HAFS/sorc/hafs_mom6_3dvar.fd/soca-science//scripts/workflow/cycle.sh
+│   ├── exp.config
+│   ├── FORC
+│   │   └── atm.nc -> /work/noaa/marine/yli/GFSatm_FORC/2020/20201025/atm_2020102500.nc
+│   ├── rst
+│   │   └── 2020102500
+│   │       └── ctrl
+│   │           ├── cice.res.nc -> /work/noaa/stmp/yli/Zeta2020_3dvar/2020102412/SCRATCH/2020102500/ana_rst/ctrl/cice.res.nc
+│   │           ├── coupler.res -> /work/noaa/stmp/yli/Zeta2020_3dvar/2020102412/SCRATCH/2020102500/ana_rst/ctrl/coupler.res
+│   │           ├── ice_model.res.nc -> /work/noaa/stmp/yli/Zeta2020_3dvar/2020102412/SCRATCH/2020102500/ana_rst/ctrl/ice_model.res.nc
+│   │           ├── MOM.res_1.nc -> /work/noaa/stmp/yli/Zeta2020_3dvar/2020102412/SCRATCH/2020102500/ana_rst/ctrl/MOM.res_1.nc
+│   │           └── MOM.res.nc -> /work/noaa/stmp/yli/Zeta2020_3dvar/2020102412/SCRATCH/2020102500/ana_rst/ctrl/MOM.res.nc
+│   └── static -> /work/noaa/stmp/yli/Zeta2020_3dvar/2020102412/static
+├── exp.config.2020102500
+├── exp.config.tmp
+└── link_fcst6660.sh
+
+6 directories, 11 files
+
+(1) Use exp.config.tmp and link_fcst6660.sh to set up run directory 2020102500 
+(2) Only change time in link_fcst6660.sh
+
