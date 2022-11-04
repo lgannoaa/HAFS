@@ -1,0 +1,5 @@
+(1) doc to set up HAFS CDEPS
+https://docs.google.com/document/d/1Ajzm8jkYFffaXJ9XSYfpe_R6VsZ7LIJEYrLhFs1HT2Y/edit
+
+(2) Only change time and MOM6 fcst path in CDEPS_SST_prep.sh
+
