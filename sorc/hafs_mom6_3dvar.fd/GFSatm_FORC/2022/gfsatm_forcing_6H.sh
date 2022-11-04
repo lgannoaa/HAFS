@@ -15,6 +15,12 @@ echo YMDH=$YMDH
 
 python3 gfsatm_forcing_6H.py ${YMDH:0:8}${YMDH:8:2} -o atm_${YMDH}.nc -t ./${YMDH:0:8}
 
+# link 00Z to daily for soca-science legacy
+if [[ ${YMDH:8:2} == "00" ]]; then
+echo $YMDH
+(cd ${YMDH:0:8}; ln -sf atm_${YMDH}.nc atm_${YMDH:0:8}.nc)
+fi
+
 YMDH=$(date -ud "$date_YMDH + $DH hours" +%Y%m%d%H )
 DH=$(($DH+6))
 
