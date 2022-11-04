@@ -1,5 +1,7 @@
+
+Makefile  rtofs_ascii2iodav2.py  rtofs_obs2iodav2_6H.sh rtofs_obs2iodav2_24H.sh  rtofs_obs_read.F90
+
 (1) 6H for 6 h obs window. 
-Makefile  rtofs_ascii2iodav2.py  rtofs_obs2iodav2_24H.sh  rtofs_obs_read.F90
 Example:
 /work/noaa/marine/yli/RTOFS_OBS
 Orion-login-4[265] yongzuo$ ls DATA/*/2022/20220920
@@ -18,5 +20,6 @@ adt_ssh_2022092000.nc  adt_ssh_2022092006.nc  adt_ssh_2022092012.nc  adt_ssh_202
 
 (2) 24H for 24 h obs window.
 
-(2) iodav2_4_3dvar.sh links IODA v2 nc files in directories used in exp.config.
+(3) iodav2_4_3dvar.sh links IODA v2 nc files in directories used in exp.config.
 
+(4) htar -xv -f ocnqc.tar every 14 days
