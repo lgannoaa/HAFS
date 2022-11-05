@@ -3,3 +3,12 @@ https://docs.google.com/document/d/1Ajzm8jkYFffaXJ9XSYfpe_R6VsZ7LIJEYrLhFs1HT2Y/
 
 (2) Only change time and MOM6 fcst path in CDEPS_SST_prep.sh
 
+2020102500
+├── CDEPS_SST_prep.py
+├── hycom_201908_surf_nolev.nc
+├── ocn_2d.nc
+├── ocn_3d.nc -> /work/noaa/stmp/yli/Zeta2020_fcst/2020102500/bkg/2020/2020102500/ctrl/ocn.bkg.2020102500.nc
+├── sst1.nc -> /work/noaa/stmp/yli/Zeta2020_fcst/2020102500/SCRATCH/2020102500/run.fcst/20201025.ocean_hourly_2d.nc
+└── sst2.nc -> /work/noaa/stmp/yli/Zeta2020_fcst/2020102500/SCRATCH/2020102718/run.fcst/20201027.ocean_hourly_2d.nc
+
+0 directories, 6 files
