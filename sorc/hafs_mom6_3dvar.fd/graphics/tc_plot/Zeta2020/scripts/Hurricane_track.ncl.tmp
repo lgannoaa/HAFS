@@ -1,0 +1,186 @@
+;*************************************************
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
+;**************************************************
+begin
+;************************************
+
+      wks      = gsn_open_wks("png","TCNAME_YYYYMMDDHH_track")   ; open workstation
+
+
+; DRAW lengend and track separately Don't worry sequence
+
+      lines = asciiread("best.track",-1,"string")
+      nbest=dimsizes(lines)
+      print("BEST"+nbest)
+      xbest = new((/nbest/),float)            ; allocate memory
+      ybest = new((/nbest/),float)
+      str1=str_get_field(lines(:),7," ")
+      str2=str_get_field(lines(:),8," ")
+      str3=str_get_field(lines(:),3," ")
+      ybest(:) = 0.1*stringtofloat(str_get_cols(str1,0,3))
+      xbest(:) = -0.1*stringtofloat(str_get_cols(str2,0,3))
+      print("BEST "+str3+"  "+ybest(:)+"  "+xbest(:))
+      delete(lines)
+      delete(str1)
+      delete(str2)
+      delete(str3)
+
+;      line = asciiread("ana.track",-1,"string")
+;      str1=str_get_field(line(:),7," ")
+;      str2=str_get_field(line(:),8," ")
+;      str3=str_get_field(line(:),3," ")
+;      yana(:) = 0.1*stringtofloat(str_get_cols(str1,0,2))
+;      xana(:) = -0.1*stringtofloat(str_get_cols(str2,0,2))
+;      ;print(""+str3+"  "+yana(:)+"  "+xana(:))
+;      delete(line)
+;      delete(str1)
+;      delete(str2)
+;      delete(str3)
+
+      line = asciiread("mom6.track",-1,"string")
+      nmom=dimsizes(line)
+      print("mom6 "+nmom)
+      xbkg = new((/nmom/),float)            ; allocate memory
+      ybkg = new((/nmom/),float)
+      str1=str_get_field(line(:),7," ")
+      str2=str_get_field(line(:),8," ")
+      ybkg(:) = 0.1*stringtofloat(str_get_cols(str1,0,2))
+      xbkg(:) = -0.1*stringtofloat(str_get_cols(str2,0,2))
+      ;print(""+ybkg(:)+"  "+xbkg(:))
+      delete(line)
+      delete(str1)
+      delete(str2)
+
+      line = asciiread("hycom.track",-1,"string")
+      nhyc=dimsizes(line)
+      print("hycom "+nhyc)
+      xhyc = new((/nhyc/),float)            ; allocate memory
+      yhyc = new((/nhyc/),float)
+      str1=str_get_field(line(:),7," ")
+      str2=str_get_field(line(:),8," ")
+      yhyc(:) = 0.1*stringtofloat(str_get_cols(str1,0,2))
+      xhyc(:) = -0.1*stringtofloat(str_get_cols(str2,0,2))
+      ;print(""+yhyc(:)+"  "+xhyc(:))
+      delete(line)
+      delete(str1)
+      delete(str2)
+
+; ########################## Geographic MAP  ###########################################
+
+   res             = True
+   res@gsnDraw     = False                         ; don't draw
+   res@gsnFrame    = False                         ; don't advance frame
+
+   res@gsnMaximize = True 
+   ;res@vpOn      = True
+   ;res@vpXF      = 0.15    ; controls off-set from left
+   ;res@vpWidthF  = 0.80    ; controls size of plot
+   ;res@vpYF      = 0.85    ; controls off-set from top
+   ;res@vpHeightF = 0.8     ; controls size of plot
+
+   res@mpFillOn              = False
+   res@mpPerimOn             = True
+   res@mpOutlineBoundarySets = "GeophysicalAndUSStates"
+   res@pmTickMarkDisplayMode = "Always"
+
+   res@mpLimitMode = "LatLon"        ; select subregion
+   res@mpMinLatF   = min(ybest(:))-2
+   res@mpMaxLatF   = max(ybest(:))+5
+   res@mpMinLonF   = min(xbest(:))-5
+   res@mpMaxLonF   = max(xbest(:))+5
+
+   res@tmXBMinorOn = True  
+   res@tmYLMinorOn = True
+   res@tmYROn      = False
+   res@tmXTOn      = False
+
+   res@tmYLMinorOutwardLengthF = 0.
+   res@tmYLMajorOutwardLengthF = 0.
+   res@tmXBMinorOutwardLengthF = 0.
+   res@tmXBMajorOutwardLengthF = 0.
+
+   res@tiMainFontHeightF = 0.03
+   res@tiMainString      = "TCNAME (2020) init YYYYMMDDHH"  ; title
+   map = gsn_csm_map_ce(wks,res)                  ; create map
+
+; ########################## Legend ###########################################
+; legend resources
+  lgres                    = True
+  lgres@lgMonoMarkerIndex  = False
+  lgres@lgMonoDashIndex    = False   
+  lgres@lgAutoManage       = False
+  lgres@lgItemType         = "MarkLines"
+  lgres@lgMarkerSizeF      = 0.0135
+; lgres@lgMarkerThicknessF = 0.6
+  lgres@lgLineColors       = (/"black","red","green"/)
+  lgres@lgMarkerColors     = (/"black","red","green"/)
+  lgres@lgMarkerIndexes    = (/16,6,7/)
+  lgres@lgDashIndexes      = (/0,0,0/)
+  labels = (/"NHC BEST","MOM6 SST","HYCOM SST"/)
+
+;  lgres@lgLineColors       = (/"black","red","blue","green"/)
+;  lgres@lgMarkerColors     = (/"black","red","blue","green"/)
+;  lgres@lgMarkerIndexes    = (/16,4,6,7/)
+;  lgres@lgDashIndexes      = (/0,0,0,0/)
+;  labels = (/"NHC BEST","MOM6 SST_ana","MOM6 SST","HYCOM SST"/)
+
+  lgres@lgLineThicknessF   = 2.5 
+  lgres@lgLabelFontHeightF     = .11
+  ;lgres@lgLabelFontThickness =  1.5
+  lgres@lgTitleFontHeightF     = .3
+  lgres@pmLegendHeightF        = 0.28 
+
+  lgres@vpWidthF           = 0.2           ; width of legend (NDC)
+  lgres@vpHeightF          = 0.2            ; height of legend (NDC)
+  lgres@lgPerimColor       = "white"       ; draw the box perimeter in orange
+  lgres@lgPerimOn       = True 
+  lgres@lgPerimFill       = 0
+  lgres@lgPerimFillColor  = 0
+  lgres@lgPerimThicknessF = 3.0            ; thicken the box perimeter
+  lbid   = gsn_create_legend(wks,3,labels,lgres)         ; create legend
+  ;lbid   = gsn_create_legend(wks,4,labels,lgres)         ; create legend
+
+  amres = True
+  amres@amParallelPosF   =  0.3 	         ; positive move legend to the right
+  amres@amOrthogonalPosF =  -0.1                 ; positive move the legend down
+  annoid1 = gsn_add_annotation(map,lbid,amres)   ; add legend to plot
+
+; ########################## Line/Marker ###########################################
+      pres                  = True               ; polyline resources
+      pres@gsLineThicknessF = 12.0                ; line thickness
+      mres  = True                       ; marker resources for best track
+      mres@gsMarkerSizeF  = 8.0          ; marker size
+
+      pres@gsLineColor      = "black"
+      mres@gsMarkerColor     = "black"      ; maker color
+      mres@gsMarkerIndex    = 16
+      gsn_polyline(wks,map,xbest(:),ybest(:),pres) ;  BEST TRACK
+      gsn_polymarker(wks,map,xbest(:),ybest(:),mres)
+
+;      pres@gsLineDashPattern = 2                ; line thickness
+;      mres@gsMarkerIndex     = 4          
+;      pres@gsLineColor       = "red"
+;      mres@gsMarkerColor     = "red"      ; maker color
+;      gsn_polyline(wks,map,xana(:),yana(:),pres) 
+;      gsn_polymarker(wks,map,xana(:),yana(:),mres)
+
+      pres@gsLineDashPattern = 2      
+      mres@gsMarkerIndex     = 6           
+      pres@gsLineColor       = "red"
+      mres@gsMarkerColor     = "red"      ; maker color
+      gsn_polyline(wks,map,xbkg(:),ybkg(:),pres)
+      gsn_polymarker(wks,map,xbkg(:),ybkg(:),mres)
+
+      pres@gsLineDashPattern = 2      
+      mres@gsMarkerIndex     = 7 
+      pres@gsLineColor       = "green"
+      mres@gsMarkerColor     = "green"      ; maker color
+      gsn_polyline(wks,map,xhyc(:),yhyc(:),pres)
+      gsn_polymarker(wks,map,xhyc(:),yhyc(:),mres)
+
+      draw(map)                                           
+      frame(wks)                                         
+  
+      end
+
