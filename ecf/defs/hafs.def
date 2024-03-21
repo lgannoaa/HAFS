@@ -41,13 +41,13 @@ suite para_hafs_v2
         # Begin for EMC TEST
         edit MACHINE_SITE 'development'
         edit PROJENVIR 'DEV'
-        edit ENVIR 'para'
+        edit ENVIR 'test'
         edit QUEUE 'devhigh'
         edit QUEUE_ARCH 'dev_transfer'
         edit PACKAGEHOME '/lfs/h2/emc/global/noscrub/%EMC_USER%/%ENVIR%/packages/hafs.%hafs_ver%'
 #       edit PACKAGEHOME '/lfs/h2/emc/hur/noscrub/emc.hur/hurops/%ENVIR%/packages/hafs.%hafs_ver%'
 #       edit OUTPUTDIR '/lfs/h2/emc/hur/noscrub/emc.hur/hurops/%ENVIR%/output/prod/today'
-        edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_hafs/para/output/prod/today'
+        edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_hafs/%ENVIR%/output/prod/today'
         edit ECF_FILES '%PACKAGEHOME%/ecf/scripts'
         # End for EMC TEST
         family v2.0
@@ -1867,13 +1867,13 @@ suite para_hafs_v2
         # Begin for EMC TEST
         edit MACHINE_SITE 'development'
         edit PROJENVIR 'DEV'
-        edit ENVIR 'para'
+        edit ENVIR 'test'
         edit QUEUE 'devhigh'
         edit QUEUE_ARCH 'dev_transfer'
         edit PACKAGEHOME '/lfs/h2/emc/global/noscrub/%EMC_USER%/%ENVIR%/packages/hafs.%hafs_ver%'
 #        edit PACKAGEHOME '/lfs/h2/emc/hur/noscrub/emc.hur/hurops/%ENVIR%/packages/hafs.%hafs_ver%'
 #        edit OUTPUTDIR '/lfs/h2/emc/hur/noscrub/emc.hur/hurops/%ENVIR%/output/prod/today'
-        edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_hafs/para/output/prod/today'
+        edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_hafs/%ENVIR%/output/prod/today'
         edit ECF_FILES '%PACKAGEHOME%/ecf/scripts'
         # End for EMC TEST
         family v2.0
@@ -3692,13 +3692,13 @@ suite para_hafs_v2
         # Begin for EMC TEST
         edit MACHINE_SITE 'development'
         edit PROJENVIR 'DEV'
-        edit ENVIR 'para'
+        edit ENVIR 'test'
         edit QUEUE 'devhigh'
         edit QUEUE_ARCH 'dev_transfer'
         edit PACKAGEHOME '/lfs/h2/emc/global/noscrub/%EMC_USER%/%ENVIR%/packages/hafs.%hafs_ver%'
 #        edit PACKAGEHOME '/lfs/h2/emc/hur/noscrub/emc.hur/hurops/%ENVIR%/packages/hafs.%hafs_ver%'
 #        edit OUTPUTDIR '/lfs/h2/emc/hur/noscrub/emc.hur/hurops/%ENVIR%/output/prod/today'
-        edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_hafs/para/output/prod/today'
+        edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_hafs/%ENVIR%/output/prod/today'
         edit ECF_FILES '%PACKAGEHOME%/ecf/scripts'
         # End for EMC TEST
         family v2.0
@@ -5517,13 +5517,13 @@ suite para_hafs_v2
         # Begin for EMC TEST
         edit MACHINE_SITE 'development'
         edit PROJENVIR 'DEV'
-        edit ENVIR 'para'
+        edit ENVIR 'test'
         edit QUEUE 'devhigh'
         edit QUEUE_ARCH 'dev_transfer'
         edit PACKAGEHOME '/lfs/h2/emc/global/noscrub/%EMC_USER%/%ENVIR%/packages/hafs.%hafs_ver%'
 #        edit PACKAGEHOME '/lfs/h2/emc/hur/noscrub/emc.hur/hurops/%ENVIR%/packages/hafs.%hafs_ver%'
 #        edit OUTPUTDIR '/lfs/h2/emc/hur/noscrub/emc.hur/hurops/%ENVIR%/output/prod/today'
-        edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_hafs/para/output/prod/today'
+        edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_hafs/%ENVIR%/output/prod/today'
         edit ECF_FILES '%PACKAGEHOME%/ecf/scripts'
         # End for EMC TEST
         family v2.0
