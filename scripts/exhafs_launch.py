@@ -258,7 +258,6 @@ def main():
                 alert()
 
     Gsi=conf.getbool('config','run_gsi')
-    #c.alter(ecf_name,'change','event','Gsi','set' if Gsi else 'clear')
     if Gsi: set_ecflow_event('Analysis',logger)
 
     Ocean=conf.getbool('config','run_ocean')
@@ -266,7 +265,6 @@ def main():
 
     Wave=conf.getbool('config','run_wave') and \
          conf.getstr('config','wave_model').upper()=='WW3'
-    #c.alter(ecf_name,'change','event','Wave','set' if Wave else 'clear')
     if Wave: set_ecflow_event('Wave',logger)
 
 if __name__ == '__main__':
